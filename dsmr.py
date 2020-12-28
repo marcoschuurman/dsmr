@@ -148,6 +148,10 @@ def main():
         mqttc.connect(MQTT_BROKER, MQTT_PORT, 60)
         mqttc.loop_start()
 
+    # Marco 28/12/2020, tbv data conversie toegevoegd:
+    convert_int = ["device_type", "tariff_indicator", "any_power_failures", "long_power_failures", "voltage_sags_P1", "voltage_swells_p1", "power_consumed_amps"]
+    convert_float = ["dsmr_version", "consumed_gas", "power_consumed_tariff_1_kwh", "power_consumed_tariff_2_kwh", "power_produced_tariff_1_kwh", "power_produced_tariff_2_kwh", "power_consumed_watts", "power_produced_watts", "current_watts_consumed", "current_watts_generated"]
+        
     while True:
         try:
             raw_line = SER.readline()
@@ -163,6 +167,12 @@ def main():
                 mqttc.publish(mqtt_topic, data[1], MQTT_QOS, MQTT_RETAIN)
                 print("[MQTT  ] Producing (%s) %s to %s..." % (data[0], data[1], mqtt_topic))
 
+            # Marco 28/12/2020, tbv data conversie toegevoegd:
+            if data[0] in convert_int:
+                data[1] = int(data[1])
+            if data[0] in convert_float:
+                data[1] = float(data[1])
+                
             if INFLUXDB_ENABLED:
                 print("[INFLUX] Posting (%s) %s to %s..." % (data[0], data[1], INFLUXDB_DB))
                 if data[1]:
