@@ -10,6 +10,9 @@ This script adheres to the 5.0.2 P1 Companion standard
 (Dutch Smart Meter Requirements) of Netbeheer Nederland written
 on 26-02-2016
 
+Changed: 28-12-2020
+By: Marco Schuurman
+
 """
 
 import sys
